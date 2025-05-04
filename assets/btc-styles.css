@@ -1,0 +1,167 @@
+/* Styles for USDT / USDC Payment Gateway Module */
+
+/* Container styles */
+.usdt-pay {
+    font-family: Arial, sans-serif;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* Logo styles */
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 100px;
+    height: auto;
+}
+
+/* Payment details container */
+.payment-details {
+    margin-bottom: 20px;
+}
+
+/* Amount display styles */
+.amount-info {
+    margin-bottom: 10px;
+}
+
+.invoice-amount {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.invoice-amount:hover {
+    background-color: #0056b3;
+}
+
+/* Select box styles */
+.currency-select,
+.network-select {
+    margin-bottom: 10px;
+}
+
+.currency-select label,
+.network-select label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+select.form-control {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* QR code display styles */
+#qrcode {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Wallet address display styles */
+#wallet-address {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+#wallet-address:hover {
+    background-color: #218838;
+}
+
+/* Responsive design */
+@media only screen and (max-width: 768px) {
+    .usdt-pay {
+        padding: 10px;
+    }
+
+    .logo img {
+        max-width: 80px;
+    }
+
+    .invoice-amount,
+    #wallet-address {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* Styles for BTC Payment Gateway Module */
+.btc-pay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.btc-pay .logo img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.btc-pay .payment-details {
+    text-align: center;
+}
+
+.btc-pay .amount-info {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.btc-pay .btn-copy {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.btc-pay .btn-copy:hover {
+    color: #0056b3;
+}
+
+#qrcode {
+    margin: 20px 0;
+}
+
+#wallet-address {
+    font-size: 1rem;
+    color: #555;
+    word-break: break-all;
+    margin-top: 10px;
+}
+
+.toast-top-center {
+    top: 20px;
+    margin: 0 auto;
+}
