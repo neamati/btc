@@ -15,7 +15,7 @@ if (!function_exists('getGatewayVariables')) {
 // Add a server-side endpoint to check transaction status
 if (isset($_GET['action']) && $_GET['action'] === 'checkTransactionStatus') {
     $walletAddress = $_GET['walletAddress'];
-    $expectedAmount = 0.00102487;//$_GET['expectedAmount'];
+    $expectedAmount = $_GET['expectedAmount'];
 
     $orderId = $_GET['orderId']; // Optional: Pass order ID if needed
 
