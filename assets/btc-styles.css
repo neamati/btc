@@ -73,7 +73,7 @@ select.form-control {
 /* QR code display styles */
 #qrcode {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 /* Wallet address display styles */
@@ -151,7 +151,7 @@ select.form-control {
 }
 
 #qrcode {
-    margin: 20px 0;
+    margin: 5px 0;
 }
 
 #wallet-address {
@@ -164,4 +164,209 @@ select.form-control {
 .toast-top-center {
     top: 20px;
     margin: 0 auto;
+}
+
+/* Updated BTC Payment Page Styles for Center Alignment */
+
+.btc-payment-container {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.btc-payment-header {
+    margin-bottom: 20px;
+}
+
+.btc-payment-header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.btc-payment-body {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.btc-amount {
+    font-size: 20px;
+    font-weight: bold;
+    color: #007bff;
+    margin: 10px 0;
+    cursor: pointer;
+    background-color: #e9f5ff;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btc-amount:hover {
+    background-color: #d0ebff;
+}
+
+.btc-wallet-address {
+    font-size: 16px;
+    font-family: monospace;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btc-wallet-address:hover {
+    background-color: #f0f0f0;
+}
+
+.btc-qrcode {
+    margin: 20px auto;
+}
+
+.btc-payment-footer {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    font-size: smaller;
+}
+
+/* Cryptocurrency Payment Page Styles */
+
+.crypto-payment-container {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.section-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #333;
+}
+
+.crypto-amount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.crypto-amount input {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    width: 150px;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.crypto-unit {
+    font-size: 16px;
+    color: #050505;
+    padding-left: 5px;
+}
+
+.qr-code-section {
+    position: relative;
+    margin-bottom: 2px;
+}
+
+.qr-code {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.qr-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.payment-address-section {
+    margin-bottom: 5px;
+}
+
+.payment-address {
+    font-size: 14px;
+    font-family: monospace;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    color: #333;
+}
+
+.payment-status-section {
+    margin-bottom: 5px;
+}
+
+.status-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+    margin-top: 20px;
+}
+
+.loading-icon {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.expiration-timer-section {
+    font-size: 14px;
+    color: #333;
+}
+
+.timer {
+    font-weight: bold;
+    color: #d9534f;
 }
