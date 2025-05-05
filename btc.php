@@ -79,18 +79,33 @@ function btc_link($params)
     $btcWalletAddress = $params['WalletAddressBTC'];
     $invoiceAmountUSD = $params['amount'];
 
-    // Fetch BTC exchange rate (using an alternative API URL)
-    $exchangeRate = @file_get_contents('https://blockchain.info/ticker');
-    if ($exchangeRate === false) {
-        return "<div class='btc-error'>The BTC rate API is currently unreachable. Please try again later.</div>";
-    }
+    // Fetch BTC exchange rate using Binance API
+    $credentials = getBinanceCredentials();
+    $apiKey = $credentials['apiKey'];
+    $secretKey = $credentials['secretKey'];
 
-    $exchangeRateData = json_decode($exchangeRate, true);
-    if (!isset($exchangeRateData['USD']['last']) || $exchangeRateData['USD']['last'] <= 0) {
+    $timestamp = round(microtime(true) * 1000);
+    $queryString = "timestamp=$timestamp";
+    $signature = hash_hmac('sha256', $queryString, $secretKey);
+
+    $url = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "X-MBX-APIKEY: $apiKey"
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $exchangeRateData = json_decode($response, true);
+    if (!isset($exchangeRateData['price']) || $exchangeRateData['price'] <= 0) {
         return "<div class='btc-error'>Invalid BTC rate. Please try again later.</div>";
     }
 
-    $btcRate = $exchangeRateData['USD']['last'];
+    $btcRate = $exchangeRateData['price'];
 
     // Fetch the sales tax percentage from admin settings
     $salesTaxPercentage = isset($params['SalesTaxPercentage']) ? (float)$params['SalesTaxPercentage'] : 5.0;
@@ -200,7 +215,6 @@ function btc_link($params)
                             }, 1000); // Delay to ensure the user sees the status change
                         } else {
                             statusText.textContent = "Awaiting Payment";
-                            statusText.style.color = "red";
                         }
                     },
                     error: function() {
