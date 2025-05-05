@@ -1,0 +1,23 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "btc",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "BTC Payment Gateway",
+    "tagline": "Accept Bitcoin payments using Binance API."
+  },
+  "logo": {
+    "filename": "assets/btc.png"
+  },
+  "support": {
+    "docs_url": "https://docs.example.com/btc-gateway"
+  },
+  "authors": [
+    {
+      "name": "Your Company Name",
+      "homepage": "https://www.example.com/"
+    }
+  ]
+}

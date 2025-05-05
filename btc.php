@@ -28,11 +28,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'checkTransactionStatus') {
 
 function btc_MetaData()
 {
+    // This function provides metadata about the BTC Payment Gateway module.
     return array(
         'DisplayName' => 'BTC Payment Gateway',
         'APIVersion' => '1.1',
-        'DisableLocalCreditCardInput' => true,
-        'TokenisedStorage' => false,
+        'Category' => 'Cryptocurrency',
+        'SupportEmail' => 'support@example.com',
+        'Author' => 'Your Company Name',
+        'Description' => 'A payment gateway for accepting Bitcoin payments using Binance API.',
     );
 }
 
