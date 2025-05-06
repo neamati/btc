@@ -79,6 +79,13 @@ function btc_config()
             'Default' => '',
             'Description' => 'Enter your Binance Secret Key.',
         ),
+        'PaymentStatus' => array(
+            'FriendlyName' => 'Default Payment Status',
+            'Type' => 'dropdown',
+            'Options' => 'Paid,Payment Pending',
+            'Default' => 'Paid',
+            'Description' => 'Select the default payment status for transactions.',
+        ),
     );
 }
 
@@ -125,7 +132,7 @@ function btc_link($params)
 
     // Convert USD to BTC and add sales tax
     $btcAmount = ($invoiceAmountUSD / $btcRate) * (1 + $salesTaxPercentage / 100);
-    $btcAmountFormatted = 0.00054853;//number_format($btcAmount, 8);
+    $btcAmountFormatted = number_format($btcAmount, 8);
 
     // Generate the payment section
     $htmlOutput = '<div class="crypto-payment-container">
@@ -163,6 +170,9 @@ function btc_link($params)
 
         <div class="btc-payment-footer">
             <p>Ensure you send the exact amount to avoid any delays in processing your payment.</p>
+            <div id="support-ticket-message" style="display: none; margin-top: 10px; font-style: normal;">
+                <p>If you made the payment and it has not been approved yet, don\'t worry. You can <a href="' . $params['systemurl'] . 'submitticket.php" target="_blank">open a ticket with our support</a>.</p>
+            </div>
         </div>
     </div>
 
@@ -243,6 +253,14 @@ function btc_link($params)
             var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
                 return new bootstrap.Popover(popoverTriggerEl);
             });
+
+            // Show support ticket message after 5 minutes
+            setTimeout(function() {
+                var supportMessage = document.getElementById("support-ticket-message");
+                if (supportMessage) {
+                    supportMessage.style.display = "block";
+                }
+            }, 300000); // 5 minutes in milliseconds
         });
 
         function copyToClipboard(element) {
@@ -276,7 +294,7 @@ function getBinanceCredentials() {
 
 function verifyBTCTransactionsTest($orderId, $expectedAmount, $walletAddress) {
     // Simulate a successful transaction
-    updateOrderStatus($orderId, 'Paid', 'testTransactionId');
+    updateOrderStatus($orderId, 'testTransactionId');
     return true;
 }
 
@@ -309,7 +327,7 @@ function verifyBTCTransactions($orderId, $expectedAmount, $walletAddress) {
             $transactionId = $deposit['txId'];
 
             // Update WHMCS order as paid and save the transaction ID
-            updateOrderStatus($orderId, 'Paid', $transactionId);
+            updateOrderStatus($orderId, $transactionId);
             return true;
         }
     }
@@ -317,7 +335,7 @@ function verifyBTCTransactions($orderId, $expectedAmount, $walletAddress) {
     return false;
 }
 
-function updateOrderStatus($orderId, $status, $transactionId) {
+function updateOrderStatus($orderId, $transactionId) {
     // Load WHMCS environment
     require_once dirname(__FILE__) . '/../../../init.php';
     require_once dirname(__FILE__) . '/../../../includes/gatewayfunctions.php';
@@ -327,6 +345,10 @@ function updateOrderStatus($orderId, $status, $transactionId) {
     $invoiceId = Capsule::table('tblorders')->where('id', $orderId)->value('invoiceid');
 
     if ($invoiceId) {
+        // Fetch the admin-defined default payment status from the module settings
+        $gatewayParams = getGatewayVariables('btc');
+        $adminDefinedStatus = $gatewayParams['PaymentStatus'];
+
         // Add payment to the invoice with the transaction ID
         addInvoicePayment(
             $invoiceId, // Invoice ID
@@ -336,7 +358,7 @@ function updateOrderStatus($orderId, $status, $transactionId) {
             'btc'      // Payment gateway module name
         );
 
-        // Mark the invoice as paid
-        Capsule::table('tblinvoices')->where('id', $invoiceId)->update(['status' => 'Paid']);
+        // Update the invoice status based on the admin-defined status
+        Capsule::table('tblinvoices')->where('id', $invoiceId)->update(['status' => $adminDefinedStatus]);
     }
 }
