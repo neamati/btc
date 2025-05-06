@@ -292,11 +292,7 @@ function getBinanceCredentials() {
     ];
 }
 
-function verifyBTCTransactionsTest($orderId, $expectedAmount, $walletAddress) {
-    // Simulate a successful transaction
-    updateOrderStatus($orderId, 'testTransactionId');
-    return true;
-}
+
 
 function verifyBTCTransactions($orderId, $expectedAmount, $walletAddress) {
     $credentials = getBinanceCredentials();
