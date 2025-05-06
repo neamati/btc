@@ -12,12 +12,12 @@
     "filename": "assets/btc.png"
   },
   "support": {
-    "docs_url": "https://docs.example.com/btc-gateway"
+    "docs_url": "https://github.com/neamati"
   },
   "authors": [
     {
-      "name": "Your Company Name",
-      "homepage": "https://www.example.com/"
+      "name": "Nabi Neamati",
+      "homepage": "https://github.com/neamati"
     }
   ]
 }
