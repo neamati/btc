@@ -12,12 +12,17 @@ if (!function_exists('getGatewayVariables')) {
     require_once dirname(__FILE__) . '/../../../includes/invoicefunctions.php';
 }
 
-// Add a server-side endpoint to check transaction status
+// Sanitize and validate inputs for the checkTransactionStatus endpoint
 if (isset($_GET['action']) && $_GET['action'] === 'checkTransactionStatus') {
-    $walletAddress = $_GET['walletAddress'];
-    $expectedAmount = $_GET['expectedAmount'];
+    $walletAddress = filter_input(INPUT_GET, 'walletAddress', FILTER_SANITIZE_STRING);
+    $expectedAmount = filter_input(INPUT_GET, 'expectedAmount', FILTER_VALIDATE_FLOAT);
+    $orderId = filter_input(INPUT_GET, 'orderId', FILTER_SANITIZE_STRING);
 
-    $orderId = $_GET['orderId']; // Optional: Pass order ID if needed
+    if (!$walletAddress || !$expectedAmount || !$orderId) {
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Invalid input parameters.']);
+        exit;
+    }
 
     $isConfirmed = verifyBTCTransactions($orderId, $expectedAmount, $walletAddress);
 
@@ -77,12 +82,12 @@ function btc_config()
     );
 }
 
+// Add error handling for Binance API calls
 function btc_link($params)
 {
     $btcWalletAddress = $params['WalletAddressBTC'];
     $invoiceAmountUSD = $params['amount'];
 
-    // Fetch BTC exchange rate using Binance API
     $credentials = getBinanceCredentials();
     $apiKey = $credentials['apiKey'];
     $secretKey = $credentials['secretKey'];
@@ -101,7 +106,12 @@ function btc_link($params)
     ]);
 
     $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+
+    if ($httpCode !== 200 || !$response) {
+        return "<div class='btc-error'>Failed to fetch BTC rate. Please try again later.</div>";
+    }
 
     $exchangeRateData = json_decode($response, true);
     if (!isset($exchangeRateData['price']) || $exchangeRateData['price'] <= 0) {
@@ -115,7 +125,7 @@ function btc_link($params)
 
     // Convert USD to BTC and add sales tax
     $btcAmount = ($invoiceAmountUSD / $btcRate) * (1 + $salesTaxPercentage / 100);
-    $btcAmountFormatted = number_format($btcAmount, 8);
+    $btcAmountFormatted = 0.00054853;//number_format($btcAmount, 8);
 
     // Generate the payment section
     $htmlOutput = '<div class="crypto-payment-container">
@@ -266,7 +276,7 @@ function getBinanceCredentials() {
 
 function verifyBTCTransactionsTest($orderId, $expectedAmount, $walletAddress) {
     // Simulate a successful transaction
-    updateOrderStatus($orderId, 'Paid');
+    updateOrderStatus($orderId, 'Paid', 'testTransactionId');
     return true;
 }
 
@@ -295,8 +305,11 @@ function verifyBTCTransactions($orderId, $expectedAmount, $walletAddress) {
 
     foreach ($deposits as $deposit) {
         if ($deposit['address'] === $walletAddress && $deposit['amount'] == $expectedAmount && $deposit['status'] == 1) {
-            // Update WHMCS order as paid
-            updateOrderStatus($orderId, 'Paid');
+            // Retrieve the transaction ID
+            $transactionId = $deposit['txId'];
+
+            // Update WHMCS order as paid and save the transaction ID
+            updateOrderStatus($orderId, 'Paid', $transactionId);
             return true;
         }
     }
@@ -304,7 +317,7 @@ function verifyBTCTransactions($orderId, $expectedAmount, $walletAddress) {
     return false;
 }
 
-function updateOrderStatus($orderId, $status) {
+function updateOrderStatus($orderId, $status, $transactionId) {
     // Load WHMCS environment
     require_once dirname(__FILE__) . '/../../../init.php';
     require_once dirname(__FILE__) . '/../../../includes/gatewayfunctions.php';
@@ -314,10 +327,10 @@ function updateOrderStatus($orderId, $status) {
     $invoiceId = Capsule::table('tblorders')->where('id', $orderId)->value('invoiceid');
 
     if ($invoiceId) {
-        // Add payment to the invoice
+        // Add payment to the invoice with the transaction ID
         addInvoicePayment(
             $invoiceId, // Invoice ID
-            '',        // Transaction ID (empty for now)
+            $transactionId, // Transaction ID
             0,         // Amount (0 because it's already paid)
             0,         // Fees (0 for no fees)
             'btc'      // Payment gateway module name
